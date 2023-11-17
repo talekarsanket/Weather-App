@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Audio, ColorRing } from 'react-loader-spinner'
-import './App.css';
+// import './App.css';
+import './index.css'
 
 function App() {
   const [cityName, setCityName] = useState('');
@@ -28,38 +29,26 @@ function App() {
       setLoading(true);
       const response = await fetch(`https://api.openweathermap.org/data/2.5/weather?q=${cityName}&appid=8736bbf85779c81a55c919d5ebf02625`);
       const data = await response.json();
-      console.log("data ----", data);
+      console.log("data11----", data);
 
-      const lat = data.coord.lat
-      const lon = data.coord.lon
-      console.log("lat ----", lat);
-      console.log("lon ----", lon);
-
-      if (data?.cod == 404) {
+      if (data?.cod === "404") {
         alert(`${data?.message}`);
         return
       };
 
+      const lat = data.coord.lat
+      const lon = data.coord.lon
+      // console.log("lat ----", lat);
+      // console.log("lon ----", lon);
+
       setStoreData(data);
       setCityName("");
 
-      const forecastResponse = await fetch(`https://api.openweathermap.org/data/2.5/onecall?lat=${lat}&lon=${lon}&exclude=current,minutely,hourly&appid=58be6fee7bd7c8756dbcc65a94860f02`);
-      console.log("forecastResponse ---------", forecastResponse);
+      const forecastResponse = await fetch(`https://api.openweathermap.org/data/2.5/onecall?lat=${lat}&lon=${lon}&exclude=current,minutely,hourly&appid=700de9c24da762a4b9d5b7fba2e2a5fa`);
+      // console.log("forecastResponse ---------", forecastResponse);
 
       const forecastJson = await forecastResponse.json();
-      console.log("fourDays ---------", forecastJson);
-
-
-      // if (forecastJson?.cod === "404") {
-      //   alert(`${forecastJson?.message}`);
-      //   return;
-      // }
-      // const forecastForNextFourDays = forecastJson.list.slice(0, 6);
-      // console.log("forecastForNextFourDays=-----", forecastForNextFourDays);
-      // setWeeklyData(forecastForNextFourDays)
-
-      // const currentday = new Date(forecastForNextFourDays[0].dt_txt);
-      // setCurrentDays(days[currentday.getDay()]);
+      setWeeklyData(forecastJson.daily);
 
     } catch (error) {
       console.log(error);
@@ -91,6 +80,12 @@ function App() {
         const response = await fetch(url);
         const data = await response.json();
         setStoreData(data);
+
+        const forecastResponse = await fetch(`https://api.openweathermap.org/data/2.5/onecall?lat=${lat}&lon=${lon}&exclude=current,minutely,hourly&appid=700de9c24da762a4b9d5b7fba2e2a5fa`);
+        console.log("forecastResponse ---------", forecastResponse);
+        const forecastJson = await forecastResponse.json();
+        setWeeklyData(forecastJson.daily);
+
       } catch (error) {
         console.log(error);
       }
@@ -109,9 +104,8 @@ function App() {
   //     setCurrentTime(new Date());
   //   }, 1000);
   //   return () => clearInterval(time)
-  // }
-
-
+  // };
+  console.log("weeklyDataata ---", weeklyData.length - 1);
 
   return (
     <>
@@ -141,26 +135,29 @@ function App() {
               {/* Right panel */}
               <div className="col-md-4 col-sm-5">
                 <h4>  {storeData?.name && storeData?.sys?.country !== undefined ? `${storeData.name}, ${storeData.sys.country}` : ''} </h4>
-                <h5>
+                <h5 >
                   <spam id="cityName" /> {getday},{monthName} {getdate}, {getYear} <spam id="cityCode" />
                 </h5>
                 <h6 id="localDate" />
-                {/* <h5 id="localTime"> {currentTime.toLocaleTimeString()} </h5> */}
+                <h5 id="localTime"> {currentTime.toLocaleTimeString()} </h5>
               </div>
               {/* Center panel */}
-              <div className="col-md-5 col-sm-7">
+              <div className="col-md-5 col-sm-7" >
                 <div className="center">
-
                   <div className='cloud_images'>
                     {storeData?.main?.temp - 273.15 < 25 ? (<img className='cloud_image_02' src="/images/cloudy.png" alt="" />) : storeData?.main?.temp - 273.15 > 25 ? (<img className='cloud_image_02' src="/images/sun.png" alt="" />) : ("")}
                   </div>
-
                   <div className='temprature'>
                     <p style={{ fontSize: "1.5rem" }}> {storeData?.main?.temp !== undefined ? (storeData.main.temp - 273.15).toFixed(1) : 0} °C  </p>
+                    <div className='temp_type'>  <h3> {storeData?.weather !== undefined ? (storeData.weather[0].main) : ""}</h3>  </div>
                   </div>
                 </div>
-                <div className='temp_type'>  <h3> {storeData?.weather !== undefined ? (storeData.weather[0].main) : ""}</h3>  </div>
+                <div className='feels_like' >
+                  <h2> Feels Like </h2>
+                  <h2> {storeData?.main?.feels_like !== undefined ? (storeData.main.feels_like - 273.15).toFixed(1) : 0} °C  </h2>
+                </div>
               </div>
+
               {/* Left panel */}
               <div className="col-xs-12 col-sm-12 col-md-3 row">
                 <div className="col-md-12 col-sm-3 col-xs-3 side-weather-info">
@@ -189,11 +186,42 @@ function App() {
         </div>
 
         {/* 6 days forecast  */}
-        {/* {weeklyData.map((ele, index) => {
-          return (
-            <div> `CURRENT DAY`${currentDays} </div>
-          )
-        })} */}
+
+        <div className="weekly-forecast-container">
+          {weeklyData.map((ele, index) => {
+            // console.log("index", index);
+            // console.log("ele",ele);
+
+            if (index < weeklyData.length - 1) {
+              var en = "en";
+              let obj = { weekday: "long" }
+              let getDate = new Date(ele.dt * 1000).toLocaleDateString()
+              let getDay = new Date(ele.dt * 1000).toLocaleDateString(en, obj);
+              return (
+                <div className='weekly-forecast-item' key={index}>
+                  <div className='current-day'>
+                    {getDay}
+                  </div>
+                  <div className='current-date'>
+                    {getDate}
+                  </div>
+                  <div className='current-temp'>
+                    <div className='day-temp'>
+                      Day - {(ele.temp.day - 273.15).toFixed(1)} °C
+                    </div>
+                    <div className='night-temp'>
+                      Night - {(ele.temp.night - 273.15).toFixed(1)} °C
+                    </div>
+                    <div className='forecast_image'>
+                      {storeData?.main?.temp - 273.15 < 25 ? (<img className='forecast_image_02' src="/images/cloudy.png" alt="" />) : storeData?.main?.temp - 273.15 > 25 ? (<img className='forecast_image_02' src="/images/sun.png" alt="" />) : ("")}
+                    </div>
+                  </div>
+
+                </div>
+              );
+            }
+          })}
+        </div>
 
       </div>
     </>
