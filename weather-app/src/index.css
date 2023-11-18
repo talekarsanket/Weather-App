@@ -14,9 +14,9 @@ body {
 #wrapper {
     background-color: #28688C;
     box-shadow: 1px 5px 25px 3px #444;
-    border-radius: 0;
+    border-radius: 10px;
     width: 100vw;
-    padding: 5px;
+    padding: 10px;
     color: white;
     overflow: hidden;
     background: url('https://i.postimg.cc/2y8wPwX3/7cd57f8b757aea1e128f2f8f6b2c1983.gif') no-repeat;
@@ -31,6 +31,10 @@ body {
     max-width: 100vw;
 }
 
+/* .gmap {
+    display: none;
+} */
+
 .container-fluid {
     background: transparent;
     margin-top: 50px !important;
@@ -38,12 +42,13 @@ body {
     padding: 20px;
     width: 60%;
     min-width: 600px;
+    border-radius: 10px;
 }
 
 /* Current Weather */
 #current-weather {
     padding: 15px;
-    margin: 50px;
+    margin: 20px;
     border-radius: 10px;
     border: 2px solid rgba(0, 0, 0, 0.2);
     background: rgba(0, 0, 0, 0.4);
@@ -61,7 +66,7 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    margin-bottom: 50px;
+    margin-bottom: 20px;
 }
 
 .search_box {
@@ -85,7 +90,7 @@ input[type='text'] {
 
 button {
     padding: 10px 20px;
-    background-color: rgb(38, 37, 89);
+    background-color: #28688C;
     color: #fff;
     border: none;
     border-radius: 0;
@@ -99,7 +104,7 @@ button {
 }
 
 button:hover {
-    background-color: #2980b9;
+    background-color: #1A4B63;
     transform: scale(1.05);
 }
 
@@ -162,8 +167,20 @@ a:focus {
 /* Weekly Forecast */
 .weekly-forecast-container {
     display: flex;
-    justify-content: space-around;
+    justify-content: space-between;
+    padding: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 10px;
     margin-top: 20px;
+    background-color: rgba(0, 0, 0, 0.5);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.forecast_content {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    width: 50%;
 }
 
 .weekly-forecast-item {
@@ -174,11 +191,28 @@ a:focus {
     border-radius: 8px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     transition: background 0.3s;
+    margin: 10px;
+    flex-basis: calc(33.33% - 20px);
 
-    &:hover {
-        background: rgba(255, 255, 255, 0.1);
+    /* Use media query to change flex-basis for smaller screens */
+    @media (max-width: 768px) {
+        flex-basis: calc(50% - 20px);
+        /* Two items in each row for smaller screens */
     }
 }
+
+.gmap {
+    margin: auto;
+    text-align: center;
+}
+
+.gmap_canvas {
+    width: 100%;
+    height: 500px;
+    /* Adjust the height as needed */
+}
+
+
 
 .current-day {
     font-weight: bold;
@@ -199,8 +233,6 @@ a:focus {
 
 .feels_like>h2 {
     font-size: small;
-    /* text-align: center; */
-    margin-left: 10%;
 }
 
 .forecast_image_02 {
