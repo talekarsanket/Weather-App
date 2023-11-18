@@ -149,7 +149,7 @@ function App() {
                 <div className="col-md-5 col-sm-7" >
                   <div className="center">
                     <div className='cloud_images'>
-                      {storeData?.main?.temp - 273.15 < 25 ? (<img className='cloud_image_02' src="/images/cloudy.png" alt="" />) : storeData?.main?.temp - 273.15 > 25 ? (<img className='cloud_image_02' src="/images/sun.png" alt="" />) : ("")}
+                      {storeData?.main?.temp - 273.15 < 25 ? (<img className='cloud_image_02' src={'../public/images/cloudy.png'} alt="" />) : storeData?.main?.temp - 273.15 > 25 ? (<img className='cloud_image_02' src="../public/images/sun.png" alt="" />) : ("")}
                     </div>
                     <div className='temprature'>
                       <p style={{ fontSize: "1.5rem" }}> {storeData?.main?.temp !== undefined ? (storeData.main.temp - 273.15).toFixed(1) : 0} °C  </p>
